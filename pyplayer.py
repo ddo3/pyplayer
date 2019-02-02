@@ -1,4 +1,6 @@
-#import vlc
+import vlc
+import numpy as np
+from typing import List
 
 song_queue = []
 queue_size = 10
@@ -8,16 +10,16 @@ current_song_num = 0
 #in this queue, we will start from the begining, and
 
 #User can have the choice of playing random songs, or playing the whole queue_size
+player = vlc.MediaPlayer("toxic.mp4")
 
-
-#p = vlc.MediaPlayer("file:///path/to/track.mp3")
 #p.play()
 
-#def start_application() -> None:
-    #
+def play_song() -> None:
+    #player = vlc.MediaPlayer("file:///path/to/track.mp3")
+    player.play();
 
-#def play_song() -> None:
-#def stop_song() -> None:
+def stop_song() -> None:
+    player.stop();
 
 def change_queue_size(size: int) -> None:
     queue_size = size
@@ -51,7 +53,10 @@ def main() -> None:
             break
         elif ans == 'help':
             possible_actions()
-
-
+        elif ans == 'play':
+            play_song()
+        elif ans == 'stop':
+            stop_song()
+            
 if __name__ == '__main__':
     main()
