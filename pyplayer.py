@@ -1,4 +1,4 @@
-import vlc
+import pyglet
 import numpy as np
 from typing import List
 
@@ -8,18 +8,31 @@ current_song_num = 0
 #need a queue of songs
 
 #in this queue, we will start from the begining, and
+#pygame.mixer.init()
 
+#player = pygame.mixer.Sound('toxic.mp4')
 #User can have the choice of playing random songs, or playing the whole queue_size
-player = vlc.MediaPlayer("toxic.mp4")
-
+#player = vlc.MediaPlayer("toxic.mp4")
+player = pyglet.media.Player()
 #p.play()
-
+#song = pyglet.media.load('toxic.mp4')
 def play_song() -> None:
+    songSource = pyglet.media.load('toxic.mp4')
+    #song = pyglet.media.load('thesong.ogg')
+    #song.play()
+    player.queue(songSource)
+    player.play()
+    #pyglet.app.run()
+    #pygame.mixer.Sound('toxic.mp4')
+    #pygame.mixer.music.load('toxic.mp4')
+    #pygame.mixer.music.play()
     #player = vlc.MediaPlayer("file:///path/to/track.mp3")
-    player.play();
+    #player.play();
 
 def stop_song() -> None:
-    player.stop();
+    #pygame.mixer.music.stop()
+    #pygame.mixer.music.stop();
+    player.pause()
 
 def change_queue_size(size: int) -> None:
     queue_size = size
@@ -57,6 +70,6 @@ def main() -> None:
             play_song()
         elif ans == 'stop':
             stop_song()
-            
+
 if __name__ == '__main__':
     main()
