@@ -1,6 +1,7 @@
 import pyglet
 import numpy as np
 from typing import List
+import os
 
 song_queue = []
 queue_size = 10
@@ -8,30 +9,34 @@ current_song_num = 0
 #need a queue of songs
 
 #in this queue, we will start from the begining, and
-#pygame.mixer.init()
 
-#player = pygame.mixer.Sound('toxic.mp4')
-#User can have the choice of playing random songs, or playing the whole queue_size
-#player = vlc.MediaPlayer("toxic.mp4")
 player = pyglet.media.Player()
-#p.play()
-#song = pyglet.media.load('toxic.mp4')
-def play_song() -> None:
-    songSource = pyglet.media.load('toxic.mp4')
-    #song = pyglet.media.load('thesong.ogg')
-    #song.play()
-    player.queue(songSource)
-    player.play()
-    #pyglet.app.run()
-    #pygame.mixer.Sound('toxic.mp4')
-    #pygame.mixer.music.load('toxic.mp4')
-    #pygame.mixer.music.play()
-    #player = vlc.MediaPlayer("file:///path/to/track.mp3")
-    #player.play();
+
+def search_for_song(song_name: str) -> str:
+    for file in os.listdir('./'):
+        if song_name in file:
+            return file
+    return None
+
+def play_queue_song() -> None:
+    if(len(song_queue) > 0):
+        player.play()
+    else:
+        print('No songs in queue')
+
+def play_song(song_name: str) -> None:
+    filename = search_for_song(song_name)
+    if(filename != None):
+        global current_song_num
+        song_queue.append( filename)
+        current_song_num = current_song_num + 1
+        songSource = pyglet.media.load(filename)
+        player.queue(songSource)
+        player.play()
+    else:
+        print('Couldnt find that song')
 
 def stop_song() -> None:
-    #pygame.mixer.music.stop()
-    #pygame.mixer.music.stop();
     player.pause()
 
 def change_queue_size(size: int) -> None:
@@ -53,7 +58,7 @@ def possible_actions() -> None:
     print('help : show actions again')
 
 def main() -> None:
-    #cmd = sys.argv[1]
+
     print('Welcome to PyPlayer!')
     print()
     possible_actions()
@@ -67,7 +72,10 @@ def main() -> None:
         elif ans == 'help':
             possible_actions()
         elif ans == 'play':
-            play_song()
+            play_queue_song()
+        elif 'play' in ans:
+            second_command = ans.split()[1]
+            play_song(second_command)
         elif ans == 'stop':
             stop_song()
 
