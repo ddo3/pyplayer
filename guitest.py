@@ -12,6 +12,7 @@ class MyFirstGUI:
     ]
     def __init__(self, master):
         self.master = master
+        self.master.geometry("500x500")
         master.title("A simple GUI")
 
         top_frame = Frame(master).pack(side = "top")
@@ -37,15 +38,23 @@ class MyFirstGUI:
         #self.popupMenu = OptionMenu(top_frame, tkvar, *choices)
         #self.popupMenu.pack()
 
-        self.listbox = Listbox(top_frame)
+        self.listbox = Listbox(top_frame, selectmode=SINGLE, width=50, height=20)
         self.listbox.pack()
         tkvar = StringVar(top_frame)
 
+        self.listbox.insert(END, 'NOT A SONG!')
         for file in os.listdir('./'):
             if '.mp3' in file or '.mp4' in file:
                 self.listbox.insert(END, file)
 
-        self.listbox.bind('<Double-Button-1>', self.test)
+
+        #self.listbox.bind('<Button-1>', self.test)
+
+        lb = self.listbox
+
+        b = Button(master, text="PLAY",
+           command=lambda lb=lb: self.play_song(self.listbox.index(ANCHOR)))
+        b.pack()
 
         self.play_btn = Button(bottom_frame , text="Play", command=self.play)
         self.play_btn.pack(side = "left")
@@ -59,9 +68,20 @@ class MyFirstGUI:
         #self.play = Button(master, text="Play", command=self.printThis('stop'))
         #self.play.pack()
 
+    def play_song(self, index) -> None:
+        if index != 0:
+            value = self.listbox.get(index)
+            print('You selected item %d: "%s"' % (index, value))
+            self.player.play_temp_song(value)
+        else:
+            print('This is not a song!')
+
+
     def test(self, evt) -> None:
         w = evt.widget
-        index = int(w.curselection()[0])
+        #print(w.curselection())
+        print(self.listbox.index(ANCHOR))
+        index = self.listbox.index(ANCHOR) #int(w.curselection()[0])
         value = w.get(index)
         print('You selected item %d: "%s"' % (index, value))
         self.player.play_temp_song(value)
